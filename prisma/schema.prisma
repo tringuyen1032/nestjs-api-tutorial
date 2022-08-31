@@ -2,30 +2,38 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+ provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+ provider = "postgresql"
+ url      = env("DATABASE_URL")
 }
 
 model User {
- id Int @id @default(autoincrement())
- createAt DateTime @default(now())
- updatedAt DateTime @updatedAt
- email String
- hash String
+ id        Int        @id @default(autoincrement())
+ createAt  DateTime   @default(now())
+ updatedAt DateTime   @updatedAt
+ email     String     @unique
+ hash      String
  firstName String?
- lastName String?
- birthday DateTime?
+ lastName  String?
+ birthday  DateTime?
+ bookmarks Bookmark[]
+
+ @@map("users")
 }
 
 model Bookmark {
-  id Int @id @default(autoincrement())
- createAt DateTime @default(now())
- updatedAt DateTime @updatedAt
- title String
+ id          Int      @id @default(autoincrement())
+ createAt    DateTime @default(now())
+ updatedAt   DateTime @updatedAt
+ title       String
  description String?
- link String
+ link        String
+
+ userId Int
+ user   User @relation(fields: [userId], references: [id])
+
+ @@map("bookmarks")
 }
